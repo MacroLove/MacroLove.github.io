@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bookinate.</title>
+		<link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<script src="./jquery-1.7.2.js"></script>
+		<script src="./bootstrap/js/bootstrap.min.js"></script>
+		<script src="./turn.js/turn.js"></script>
+
+		<style type="text/css">
+			body {
+				background: #ccc;
+				text-align: center;
+				padding-top: 10px;
+				font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+				font-size: 15px;
+				text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
+			}
+
+			#book {
+				position: absolute;
+				width: 80%;
+				height: 95%;
+				top: 50%;
+				margin: 0 auto;
+			}
+
+			#book .turn-page{
+				background-color: white;
+			}
+
+			#book .binding {
+				background: #333;
+				font-size: 50px;
+				text-align: center;
+				line-height: 500px;
+				margin: 0px;
+				color: white;
+			}
+
+			#reload {
+				background: #666;
+				padding: 5px 10px;
+				color: #fff;
+				border-radius: 5px;
+				-moz-border-radius: 5px;
+				-webkit-border-radius: 5px;
+				border: 1px solid #666;
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<div class="container">
+			<h1>Bookinate.</h1>
+			<textarea class="title input-xxlarge" rows="1" placeholder="Book Cover/Title."></textarea><br />
+			<textarea class="textcontent input-xxlarge" rows="18" placeholder="Book Content (HTML/Text).											Use Shift + Left-click or Insert Page Break button for a page break."></textarea><br />
+			<button class="bookinate btn btn-large btn-primary" type="button">Bookinate.</button>
+			<button class="pagebreaks btn btn-large btn-primary" type="button">Insert Page Break.</button><br />
+		</div>
+
+		<div id="bookcontainer">
+		</div><br />
+
+		<div id="reloadpage">
+		</div>
+
+		<script>
+			var noOfPages;
+			var delimiter = '<pagebreak>';
+
+			$(document).ready(function() {
+				$('textarea.title').focus();
+				$('.bookinate').click(function() {
+					$('#book').unbind();
+					$('#book').remove();
+					$('#bookcontainer div').empty();
+
+					var title = $('textarea.title').val();
+					var text = $('textarea.textcontent').val();
+
+					var pageContents = text.split(delimiter);
+					$('.container').remove();
+
+					$('#bookcontainer').html('<div id="book"></div>');
+					$('#book').html('<div class="binding">' + title + '</div>');
+
+					noOfPages = pageContents.length + 2;
+
+					for (var eachPage = 0; eachPage < noOfPages; eachPage++) {
+						if (eachPage == 0 || eachPage == noOfPages - 1) {
+							if (eachPage == 0) {
+								$('#book').append('<div class="content"></div>');
+							} else if(eachPage == noOfPages - 1 && eachPage % 2 == 0) {
+								$('#book').append('<div class="content"></div>');
+							}
+							continue;
+						}
+
+						$('#book').append('<div class="content">' + pageContents[eachPage - 1] + '</div>');
+					}
+
+					$('#reloadpage').html('<p>Use left/right arrow keys or click and drag the corners to turn pages.</p><br /><button id="reload" type="button">Go back.</button>'/*<button id="source" type="button">View Source.</button>'*/);
+
+					$('#book').turn({
+						autoCenter: true,
+						acceleration: true,
+						pages: noOfPages,
+						elevation: 50,
+						gradients: !$.isTouch
+					});
+
+					$('#reload').click(function() {
+						var reloadOrNot = window.prompt('To copy book contents to clipboard before reloading, press Ctrl+C.', text);
+						if (reloadOrNot != null)
+							document.location.reload();
+					});
+
+					/*$('#source').click(function() {
+						window.prompt('Copy to Clipboard, Ctrl+C and Enter', '<!DOCTYPE html><html>' + document.getElementsByTagName('html')[0].innerHTML + '</html>');
+					});*/
+
+					$(document).bind('keydown', function(key) {
+						if (key.target && key.target.tagName.toLowerCase() != 'input')
+							if (key.keyCode == 37)
+								$('#book').turn('previous');
+							else if (key.keyCode == 39)
+								$('#book').turn('next');
+					});
+					
+				});
+
+				// stackoverflow credits for getCursorPosition(): http://stackoverflow.com/q/1891444
+				(function ($, undefined) {
+	    			$.fn.getCursorPosition = function() {
+    			    	var el = $(this).get(0);
+				        var pos = 0;
+				        if('selectionStart' in el) {
+				            pos = el.selectionStart;
+				        } else if('selection' in document) {
+			    	        el.focus();
+			        	    var Sel = document.selection.createRange();
+			            	var SelLength = document.selection.createRange().text.length;
+				            Sel.moveStart('character', -el.value.length);
+				            pos = Sel.text.length - SelLength;
+				        }
+				        return pos;
+			    	}
+				})(jQuery);
+
+				function insertTextAtPosition(elementClass, textToInsert) {
+					var element = $(elementClass);
+				    var scrollPosition = element.scrollTop;
+				    var caretPosition = 0;
+
+					caretPosition = element.getCursorPosition();
+
+					var preceding = (element.val()).substring(0, caretPosition);
+					var succeeding = (element.val()).substring(caretPosition, element.val().length);
+
+					element.val(preceding + textToInsert + succeeding);
+				    caretPosition = caretPosition + textToInsert.length;
+
+				    element.selectionStart = caretPosition;
+				    element.selectionEnd = caretPosition;
+				    element.focus();
+
+					element.scrollTop = scrollPosition;
+				}
+
+				$('.pagebreaks').click(function() {
+					insertTextAtPosition('textarea.textcontent', delimiter);
+				});
+
+				$(document).click(function(key) {
+					if (key.shiftKey) {
+						insertTextAtPosition('textarea.textcontent', delimiter);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
