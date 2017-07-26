@@ -102,7 +102,6 @@ body{
             $.ajax({
                    url:"./test.htm",
                               type:"GET",
-                              dataType: "text/html",
                               success:function(msg){
                                 console.log(msg+"");
                                 element.html($(msg).find("div.content"));
