@@ -120,7 +120,7 @@ var has3d,
 					position: 'absolute',
 					top: top,
 					left: left,
-					'overflow-y': 'scroll',//overf || 'hidden',
+					'overflow': overf || 'hidden',
 					'z-index': zIndex || 'auto'
 					}
 			};
