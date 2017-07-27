@@ -27,7 +27,7 @@ var has3d,
 
 	PI = Math.PI,
 
-	A90 = PI/2,
+	A90 = PI/4,
 
 	isTouch = 'ontouchstart' in window,
 
@@ -1068,7 +1068,7 @@ turnMethods = {
 
 			e.stopPropagation();
 
-		if ((new Date().getTime())-data.time<200 || point.x<0 || point.x>$(this).width()/2) {
+		if ((new Date().getTime())-data.time<200 || point.x<0 || point.x>$(this).width()) {
 			e.preventDefault();
 			data.opts.turn.data().tpage = data.opts.next;
 			data.opts.turn.turn('update');
