@@ -1068,7 +1068,7 @@ turnMethods = {
 
 			e.stopPropagation();
 
-		if ((new Date().getTime())-data.time<200 || point.x<0 || point.x>$(this).width()) {
+		if ((new Date().getTime())-data.time<400 || point.x<50 || point.x>$(this).width()) {
 			e.preventDefault();
 			data.opts.turn.data().tpage = data.opts.next;
 			data.opts.turn.turn('update');
@@ -1458,7 +1458,7 @@ flipMethods = {
 
 				alpha = A90 - tan;
 				a = deg(alpha);
-				middle = point2D((left) ? width/2 - rel.x/2 : point.x + rel.x/2, rel.y/2);
+				middle = point2D((left) ? width - rel.x/2 : point.x + rel.x/2, rel.y/2);
 
 				var gamma = alpha - Math.atan2(middle.y, middle.x),
 					distance =  Math.max(0, Math.sin(gamma) * Math.sqrt(Math.pow(middle.x, 2) + Math.pow(middle.y, 2)));
