@@ -27,7 +27,7 @@ var has3d,
 
 	PI = Math.PI,
 
-	A90 = PI/4,
+	A90 = PI/2,
 
 	isTouch = 'ontouchstart' in window,
 
@@ -1458,7 +1458,7 @@ flipMethods = {
 
 				alpha = A90 - tan;
 				a = deg(alpha);
-				middle = point2D((left) ? width - rel.x/2 : point.x + rel.x/2, rel.y/2);
+				middle = point2D((left) ? width/2 - rel.x/2 : point.x + rel.x/2, rel.y/2);
 
 				var gamma = alpha - Math.atan2(middle.y, middle.x),
 					distance =  Math.max(0, Math.sin(gamma) * Math.sqrt(Math.pow(middle.x, 2) + Math.pow(middle.y, 2)));
