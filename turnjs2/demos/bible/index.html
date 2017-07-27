@@ -1,17 +1,24 @@
 <!doctype html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../turn.min.js"></script>
 
 <style type="text/css">
 body{
 	background:#ccc;
+	margin:0; 
+	width: 100%;
+	height:screen.availHeight;
 }
 #book{
-	width:800px;
-	height:500px;
+	width:100%;
+	height:100%;
 }
 
 #book .turn-page{
@@ -26,7 +33,8 @@ body{
 	color:white;
 	text-align:center;
 	font-size:50px;
-	line-height:500px;
+	line-height:100%;
+	height:100%;
 	margin:0px;
 }
 
@@ -36,15 +44,16 @@ body{
 	height:24px;
 	display:block;
 	position:absolute;
-	top:238px;
-	left:188px;
+	top:50%;
+	left:50%;
 }
 
 #book .data{
 	text-align:center;
 	font-size:40px;
 	color:#999;
-	line-height:500px;
+	line-height:100%;
+	height:100%;
 }
 
 #controls{
@@ -85,6 +94,22 @@ body{
 
 <script type="text/javascript">
 
+	//判断手机类型
+	window.onload = function () {
+	    //alert($(window).height());
+	    var u = navigator.userAgent;
+	    if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {//安卓手机
+	    } else if (u.indexOf('iPhone') > -1) {//苹果手机
+	        //屏蔽ios下上下弹性
+	        $(window).on('scroll.elasticity', function (e) {
+	            e.preventDefault();
+	        }).on('touchmove.elasticity', function (e) {
+	            e.preventDefault();
+	        });
+	    } else if (u.indexOf('Windows Phone') > -1) {//winphone手机
+	    }
+	}
+
 	// Sample using dynamic pages with turn.js
 
 	var numberOfPages = 1000; 
@@ -122,7 +147,21 @@ body{
 	}
 
 	$(window).ready(function(){
+		
+    var w = $(window).width();
+    var h = $(window).height();
+    $('.book').width(w).height(h);
+    $(window).resize(function () {
+        w = $(window).width();
+        h = $(window).height();
+        $('.book').width(w).height(h);
+    });
+                
 		$('#book').turn({acceleration: true,
+              // Width
+              width: w,
+              // Height
+              height: h,
 							display:"single",
 							pages: numberOfPages,
 							elevation: 50,
