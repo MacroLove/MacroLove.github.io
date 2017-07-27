@@ -1068,7 +1068,7 @@ turnMethods = {
 
 			e.stopPropagation();
 
-		if ((new Date().getTime())-data.time<400 || point.x<50 || point.x>$(this).width()) {
+		if ((new Date().getTime())-data.time<400 || point.x<60 || point.x>($(this).width()-60)) {
 			e.preventDefault();
 			data.opts.turn.data().tpage = data.opts.next;
 			data.opts.turn.turn('update');
