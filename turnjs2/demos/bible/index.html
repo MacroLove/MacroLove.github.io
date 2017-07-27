@@ -148,8 +148,8 @@ body{
 
 	$(window).ready(function(){
 		
-    var w = $(window).width();
-    var h = $(window).height();
+    var w = $(window).width() - 20;
+    var h = $(window).height() - 20;
     $('.book').width(w).height(h);
     $(window).resize(function () {
         w = $(window).width();
