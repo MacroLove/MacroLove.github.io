@@ -100,7 +100,7 @@ body{
 			book.turn('addPage', element, page);
 			// Let's assum that the data is comming from the server and the request takes 1s.
 			//setTimeout(function(){
-            $.ajax({
+      /*      $.ajax({
                    url:"./test.htm",
                               type:"GET",
                               success:function(msg){
@@ -111,6 +111,12 @@ body{
                                 element.html('<div class="data">Data for page '+thrownError+'</div>');
                               }
                               });
+			*/
+			$.ajax({url: 'test.htm'}).
+					done(function(pageHtml) {
+						element.html(pageHtml);
+					});
+		
 			//}, 1000);
 		}
 	}
