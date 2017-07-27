@@ -120,7 +120,7 @@ var has3d,
 					position: 'absolute',
 					top: top,
 					left: left,
-					'overflow': overf || 'hidden',
+					'overflow-y': 'scroll',//overf || 'hidden',
 					'z-index': zIndex || 'auto'
 					}
 			};
@@ -371,7 +371,7 @@ turnMethods = {
 					data.pageWrap[page] = $('<div/>', {'class': 'turn-page-wrapper',
 													page: page,
 													css: {position: 'absolute',
-													overflow: 'auto',
+													overflow: 'scroll',
 													width: pageWidth,
 													height: pageHeight}}).
 													css(pagePosition[(data.display=='double') ? page%2 : 0]);
