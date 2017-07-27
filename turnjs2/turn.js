@@ -371,7 +371,7 @@ turnMethods = {
 					data.pageWrap[page] = $('<div/>', {'class': 'turn-page-wrapper',
 													page: page,
 													css: {position: 'absolute',
-													overflow: 'scroll',
+													overflow: 'hidden',
 													width: pageWidth,
 													height: pageHeight}}).
 													css(pagePosition[(data.display=='double') ? page%2 : 0]);
