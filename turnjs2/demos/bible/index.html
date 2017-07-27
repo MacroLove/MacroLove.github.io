@@ -87,7 +87,7 @@ body{
 <body>
 
 <div id="book">
-	<div class="cover"><h1>44 aaa</h1></div>
+	<div class="cover"><h1>3s aaa</h1></div>
 </div>
 
 <div id="controls" hidden>
@@ -141,6 +141,9 @@ body{
 			*/
 			$.ajax({url: 'test.htm'}).
 					done(function(pageHtml) {
+						pageHtml = pageHtml.replace(/['"]http:([^'"]+)/gi, function(s){
+																		if (s.indexOf(".jpg") >= 0 || s.indexOf(".png") >= 0 || s.indexOf(".gif") >= 0) return s; else return "\"#";
+																	});
 						element.html('<div class="data">' + pageHtml+'</div>');
 					});
 		
