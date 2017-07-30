@@ -22,7 +22,7 @@ body{
 }
 
 #book .turn-page{
-	background-color:white;
+	background-color:#ffc587;
 }
 
 #book .cover{
@@ -35,7 +35,7 @@ body{
 	font-size:50px;
 	line-height:100%;
 	height:100%;
-	margin:0px;
+	marginTop:300px;
 }
 
 #book .loader{
@@ -155,7 +155,7 @@ body{
 	function GetQueryString(name)
 	{
 	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-	     var r = window.location.search.substr(1).match(reg);
+	     var r = decodeURI(window.location.search).substr(1).match(reg);
 	     if(r!=null)return  unescape(r[2]); return null;
 	}
 	
