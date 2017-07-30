@@ -4,8 +4,16 @@
 	
 <meta http-equiv=Content-Type content="text/html; charset=utf-8">
 <script language="javascript" type="text/javascript">
-
-window.location.href="./quan_bajiq/index.html";
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	
+	
+	
+	window.location.href="./"+GetQueryString('url')+'?title='+GetQueryString('title');
 
 </script>
 </head>

@@ -87,7 +87,7 @@ body{
 <body>
 
 <div id="book">
-	<div class="cover"><h1>醉拳</h1></div>
+	<div class="cover"><h1></h1></div>
 </div>
 
 <div id="controls" hidden>
@@ -140,7 +140,7 @@ body{
                               });
 	*/
 	
-			$.ajax({url: page+'.htm'}).
+			$.ajax({url: (page-1)+'.htm'}).
 					done(function(pageHtml) {
 						pageHtml = pageHtml.replace(/['"]http:([^'"]+)/gi, function(s){
 																		if (s.indexOf(".jpg") >= 0 || s.indexOf(".png") >= 0 || s.indexOf(".gif") >= 0) return s; else return "\"#";
@@ -152,7 +152,15 @@ body{
 		}
 	}
 
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	
 	$(window).ready(function(){
+		$('.cover').html('<h1>'+GetQueryString('title')+'</h1>');
 		
     var w = $(window).width();
     var h = $(window).height();
