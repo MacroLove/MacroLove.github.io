@@ -31,13 +31,20 @@ body{
 	}
 	
 	
-	window.location.replace(window.location.href.replace("index_1.html", "index.html"));
-
 </script>
 </head>
 <body>
 
 <script language="javascript" type="text/javascript">
+	var next = window.location.href.replace("index_1.html", "index.html");
+	var hint =document.createElement("link");
+	hint.setAttribute('rel','prerender');
+	hint.setAttribute('href',next);
+	document.getElementsByTagName('head')[0].appendChild(hint);
+	
+	setTimeout(function(){
+		window.location.replace(next);
+		}, 3000);
 
 	//alert(GetQueryString('url'));
 </script>
