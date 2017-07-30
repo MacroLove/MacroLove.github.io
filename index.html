@@ -137,8 +137,8 @@ body{
 			// If not then add the page
 			book.turn('addPage', element, page);
 			// Let's assum that the data is comming from the server and the request takes 1s.
-			//$.ajax({url: ''+baseFolder+'/'+(page-1)+'.htm'}).
-			$.ajax({url: 'https://raw.githubusercontent.com/MacroLove/MacroLove.github.io/master/'+baseFolder+'/'+(page-1)+'.htm'}).
+			//$.ajax({url: 'https://raw.githubusercontent.com/MacroLove/MacroLove.github.io/master/'+baseFolder+'/'+(page-1)+'.htm'}).
+			$.ajax({url: ''+baseFolder+'/'+(page-1)+'.htm'}).
 					done(function(pageHtml) {
 						pageHtml = pageHtml.replace(/['"]http:([^'"]+)/gi, function(s){
 																		if (s.indexOf(".jpg") >= 0 || s.indexOf(".png") >= 0 || s.indexOf(".gif") >= 0) return s; else return "\"#";
