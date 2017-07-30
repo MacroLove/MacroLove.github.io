@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<script type="text/javascript" src="../turnjs2/jquery.js"></script>
+<script type="text/javascript" src="../turnjs2/turn.js"></script>
+
+<style type="text/css">
+body{
+	background:#ccc;
+	margin:0; 
+	width: 100%;
+	height:screen.availHeight;
+}
+#book{
+	width:100%;
+	height:100%;
+}
+
+#book .turn-page{
+	background-color:white;
+}
+
+#book .cover{
+	background:#333;
+}
+
+#book .cover h1{
+	color:white;
+	text-align:center;
+	font-size:50px;
+	line-height:100%;
+	height:100%;
+	margin:0px;
+}
+
+#book .loader{
+	background-image:url(loader.gif);
+	width:24px;
+	height:24px;
+	display:block;
+	position:absolute;
+	top:50%;
+	left:50%;
+}
+
+#book .data{
+	font-size:14px;
+	color:#000;
+	line-height:100%;
+	height:100%;
+	width:100%;
+	overflow-y:scroll;
+}
+
+#controls{
+	width:100%;
+	text-align:center;
+	margin:20px 0px;
+	font:30px arial;
+}
+
+#controls input, #controls label{
+	font:30px arial;
+}
+
+#book .odd{
+	background-image:-webkit-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-moz-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-o-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-ms-linear-gradient(left, #FFF 95%, #ddd 100%);
+}
+
+#book .even{
+	background-image:-webkit-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-moz-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-o-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-ms-linear-gradient(right, #FFF 95%, #ddd 100%);
+}
+
+</style>
+</head>
+<body>
+
+<div id="book">
+	<div class="cover"><h1>醉拳</h1></div>
+</div>
+
+<div id="controls" hidden>
+	<label for="page-number">Page:</label> <input type="text" size="3" id="page-number"> of <span id="number-pages"></span>
+</div>
+
+<script type="text/javascript">
+
+	//判断手机类型
+	window.onload = function () {
+	    //alert($(window).height());
+	    var u = navigator.userAgent;
+	    if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {//安卓手机
+	    } else if (u.indexOf('iPhone') > -1) {//苹果手机
+	        //屏蔽ios下上下弹性
+	        $(window).on('scroll.elasticity', function (e) {
+	            e.preventDefault();
+	        }).on('touchmove.elasticity', function (e) {
+	            e.preventDefault();
+	        });
+	    } else if (u.indexOf('Windows Phone') > -1) {//winphone手机
+	    }
+	}
+
+	// Sample using dynamic pages with turn.js
+
+	var numberOfPages = 100; 
+
+
+	// Adds the pages that the book will need
+	function addPage(page, book) {
+		// 	First check if the page is already in the book
+		if (!book.turn('hasPage', page)) {
+			// Create an element for this page
+			var element = $('<div />', {'class': 'page '+((page%2==0) ? 'odd' : 'even'), 'id': 'page-'+page}).html('<i class="loader"></i>');
+			// If not then add the page
+			book.turn('addPage', element, page);
+			// Let's assum that the data is comming from the server and the request takes 1s.
+			//setTimeout(function(){
+      /*      $.ajax({
+                   url:"./test.htm",
+                              type:"GET",
+                              success:function(msg){
+                                console.log(msg+"");
+                                element.html($(msg).find("div.content"));
+                              },
+                              error:function(XMLHttpRequest, textStatus, thrownError){
+                                element.html('<div class="data">Data for page '+thrownError+'</div>');
+                              }
+                              });
+	*/
+	
+			$.ajax({url: page+'.htm'}).
+					done(function(pageHtml) {
+						pageHtml = pageHtml.replace(/['"]http:([^'"]+)/gi, function(s){
+																		if (s.indexOf(".jpg") >= 0 || s.indexOf(".png") >= 0 || s.indexOf(".gif") >= 0) return s; else return "\"#";
+																	});
+						element.html('<div class="data">' + pageHtml+'</div>');
+					});
+		
+			//}, 1000);
+		}
+	}
+
+	$(window).ready(function(){
+		
+    var w = $(window).width();
+    var h = $(window).height();
+    $('.book').width(w).height(h);
+    $(window).resize(function () {
+        w = $(window).width();
+        h = $(window).height();
+        $('.book').width(w).height(h);
+    });
+                
+		$('#book').turn({acceleration: true,
+              // Width
+              width: w,
+              // Height
+              height: h,
+							display:"single",
+							pages: numberOfPages,
+							elevation: 50,
+							gradients: !$.isTouch,
+							autoCenter: true,
+							when: {
+								turning: function(e, page, view) {
+
+									// Gets the range of pages that the book needs right now
+									var range = $(this).turn('range', page);
+
+									// Check if each page is within the book
+									for (page = range[0]; page<=range[1]; page++) 
+										addPage(page, $(this));
+
+								},
+
+								turned: function(e, page) {
+									$('#page-number').val(page);
+								}
+							}
+						});
+
+		$('#number-pages').html(numberOfPages);
+
+		$('#page-number').keydown(function(e){
+
+			if (e.keyCode==13)
+				$('#book').turn('page', $('#page-number').val());
+				
+		});
+	});
+
+	$(window).bind('keydown', function(e){
+
+		if (e.target && e.target.tagName.toLowerCase()!='input')
+			if (e.keyCode==37)
+				$('#book').turn('previous');
+			else if (e.keyCode==39)
+				$('#book').turn('next');
+
+	});
+
+</script>
+
+
+</body>
+</html>
